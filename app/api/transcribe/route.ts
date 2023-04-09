@@ -1,10 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { NextResponse } from "next/server";
 
 const MAX_FILE_SIZE = 25 * 1024 * 1024; // 50 MB in bytes
 const key = process.env.OPENAI_API_KEY;
 
+type DataFormat = {
+  data: {
+    text: string;
+  };
+};
 export async function POST(request: Request) {
   const formData = await request.formData();
   const file = formData.get("file") as File;
@@ -34,6 +37,6 @@ export async function POST(request: Request) {
       body: formBody,
     }
   );
-  const data = await response.json();
+  const data = (await response.json()) as DataFormat;
   return NextResponse.json({ data });
 }

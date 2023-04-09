@@ -3,6 +3,11 @@
 import { type NextPage } from "next";
 import { useState } from "react";
 
+type DataResponse = {
+  data: {
+    text: string;
+  };
+};
 const Home: NextPage = () => {
   const [mp3File, setMp3File] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -28,26 +33,35 @@ const Home: NextPage = () => {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     event.preventDefault();
 
     if (!mp3File) {
       return;
     }
-    setLoading(true);
-    const formData = new FormData();
-    formData.append("file", mp3File);
-    const response = await fetch("/api/transcribe", {
-      method: "POST",
-      body: formData,
-    });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const data = await response.json();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-    setTranscribedText(data.data.text);
-    setLoading(false);
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", mp3File);
+
+      const response = await fetch("/api/transcribe", {
+        method: "POST",
+        body: formData,
+      });
+      const data = (await response.json()) as DataResponse;
+      setTranscribedText(data.data.text);
+    } catch (error) {
+      console.error(error);
+      setError("Sorry, something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
     <>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
