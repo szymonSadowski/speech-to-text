@@ -1,5 +1,6 @@
 "use client";
 
+import { Loading } from "components/Loading";
 import { type NextPage } from "next";
 import { useState } from "react";
 
@@ -47,7 +48,6 @@ const Home: NextPage = () => {
     try {
       const formData = new FormData();
       formData.append("file", mp3File);
-
       const response = await fetch("/api/transcribe", {
         method: "POST",
         body: formData,
@@ -64,17 +64,51 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-          <form onSubmit={handleSubmit}>
-            <input type="file" accept="audio/mp3" onChange={handleFileChange} />
-            <button type="submit">Transcribe</button>
+      <main className="flex min-h-screen justify-center px-16 py-16 text-slate-200">
+        <div className="container flex max-w-4xl flex-col gap-12">
+          <h1 className=" bg-gradient-to-l from-yellow-400 to-yellow-600 bg-clip-text text-center text-5xl font-extrabold tracking-tight text-transparent sm:text-[5rem]">
+            Speech to Text
+          </h1>
+          <h2 className="text-center text-2xl font-bold">
+            Upload <span className="text-yellow-400"> MP3</span> and get it in
+            text format with <span className="text-yellow-400"> GPT</span>
+          </h2>
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col items-center justify-center gap-12"
+          >
+            <div className="w-full">
+              <label
+                className="text-m block py-2 font-medium text-slate-200"
+                htmlFor="file_input"
+              >
+                Upload file
+              </label>
+              <input
+                className="w-full cursor-pointer border-2 border-slate-300 bg-slate-700 text-sm focus:outline-none"
+                id="file_input"
+                type="file"
+                accept="audio/mp3"
+                onChange={handleFileChange}
+              />
+              <p className="py-2 text-sm text-slate-500" id="file_input_help">
+                MP3 (MAX.)
+              </p>
+            </div>
+            <button
+              className="text-l inline-flex items-center justify-center border-2 border-yellow-400 px-8 py-2 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-slate-100 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 dark:data-[state=open]:bg-slate-800"
+              type="submit"
+            >
+              Transcribe
+            </button>
             {loading ? (
-              <div>Loading ...</div>
+              <Loading />
             ) : (
               <>
                 {transcribedText.length > 5 && (
-                  <div className="w-full text-white">{transcribedText}</div>
+                  <div className="animate-fade-in w-full text-slate-300">
+                    {transcribedText}
+                  </div>
                 )}
               </>
             )}
