@@ -21,8 +21,8 @@ const Home: NextPage = () => {
       const fileSizeInBytes = selectedFile.size;
       const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
 
-      if (fileSizeInMegabytes > 25) {
-        setError("File size cannot exceed 25 MB");
+      if (fileSizeInMegabytes > 4) {
+        setError("File size cannot exceed 4 MB");
         setMp3File(null);
       } else {
         setError(null);
@@ -92,7 +92,7 @@ const Home: NextPage = () => {
                 onChange={handleFileChange}
               />
               <p className="py-2 text-sm text-slate-500" id="file_input_help">
-                MP3 (MAX.)
+                MP3 (MAX 4MB)
               </p>
             </div>
             <button

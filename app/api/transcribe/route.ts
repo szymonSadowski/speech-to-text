@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const MAX_FILE_SIZE = 25 * 1024 * 1024; // 50 MB in bytes
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 50 MB in bytes
 const key = process.env.OPENAI_API_KEY;
 
 type DataFormat = {
